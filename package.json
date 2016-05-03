@@ -1,0 +1,19 @@
+{
+  "name": "githubbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apiai": "^2.0.1",
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "google-geocode": "0.0.2",
+    "mongoose": "^4.4.14",
+    "request": "^2.72.0"
+  }
+}
