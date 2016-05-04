@@ -14,6 +14,7 @@
     "express": "^4.13.4",
     "google-geocode": "0.0.2",
     "mongoose": "^4.4.14",
+    "nbrite": "^0.2.0",
     "request": "^2.72.0"
   }
 }
