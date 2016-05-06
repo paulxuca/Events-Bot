@@ -83,7 +83,7 @@ function determineStage(user, response) {
     const sender = user.sender;
     const categories = user.categories;
     const action = response.result.action;
-    const parameters = response.result.parameters;
+    const parameters = (response.result.parameters) ? response.result.parameters : undefined;
 
     if (status === STATES.INITIAL) {
         if (action != USER_ACTIONS.LOCATION_SET) {
@@ -103,8 +103,13 @@ function determineStage(user, response) {
             receivedUserLocation(parameters.q, sender);
         }
     } else if (categories[0] === STATES.SELECTED_CATEGORY && action === USER_ACTIONS.EVENTS_SEARCH) {
-        promiseSendMessage(sender, `These are some events that you may like!`)
-            .then(findEventAndParse(sender, parameters.event_type, user.location.lat.toString(), user.location.lng.toString())) // meme
+        if (parameters.event_type) {
+            promiseSendMessage(sender, `These are some events that you may like!`)
+                .then(findEventAndParse(sender, parameters.event_type, user.location.lat.toString(), user.location.lng.toString())) // meme
+        } else {
+            promiseSendMessage(sender, `These are some events that you may like based on your preference of ${user.categories[1]}.`)
+                .then(findEventAndParse(sender, user.categories[1], user.location.lat.toString(), user.location.lng.toString())) // meme
+        }
     } else if (status === STATES.LOCATION_CONFIRMED && action === USER_ACTIONS.EVENTS_SEARCH) {
         if (user.categories.length === 0) {
             getUserCategories(sender);
@@ -113,18 +118,16 @@ function determineStage(user, response) {
                 .then(updateUser(sender, { categories: [STATES.SELECTED_CATEGORY, parameters.event_type] }))
                 .then(findEventAndParse(sender, parameters.event_type, user.location.lat.toString(), user.location.lng.toString()));
         }
-    } else if (parameters.simplified === USER_ACTIONS.HELLO) {
-        sendMessage(sender, response.result.fulfillment.speech);
-    } else if (parameters.simplified && parameters.simplified === USER_ACTIONS.WHO_ARE_YOU) {
+    } else if (parameters) {
+        if (parameters.simplified === USER_ACTIONS.HELLO) {
+            sendMessage(sender, response.result.fulfillment.speech);
+        }
+    } else if (parameters && parameters.simplified === USER_ACTIONS.WHO_ARE_YOU) {
         sendMessage(sender, CONVERSATIONS.ABOUT_SCOUT);
     } else {
         sendMessage(sender, "I'm not sure how to respond to that. Ask me to find you an event, and I'll do that. Anything else? Nah. If you need some help, just enter \"Help\".")
     }
 }
-
-
-
-
 
 
 function locationPostback(sender, category_selected, postback) {
