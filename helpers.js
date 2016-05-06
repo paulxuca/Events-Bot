@@ -14,6 +14,29 @@ var apiAiApp = apiAi(apiAiToken);
 var Nbrite = require('nbrite');
 var nbrite = new Nbrite({ token: process.env.EVENTBRITE_TOKEN });
 
+var CONVERSATIONS = {
+    ABOUT_SCOUNT: `I'm a sloth that finds you cool events to attend.`
+}
+
+var STATES = {
+    INITIAL: 'INITIAL',
+    RECEIVED_LOCATION: 'RECEIVED_LOCATION',
+    LOCATION_CORRECT: 'LOCATION_CORRECT',
+    LOCATION_INCORRECT: 'LOCATION_INCORRECT',
+    LOCATION_CONFIRMED: 'LOCATION_CONFIRMED',
+    SELECTING_CATEGORY: 'SELECTING_CATEGORY',
+    SELECTED_CATEGORY: 'SELECTED_CATEGORY'
+}
+
+var USER_ACTIONS = {
+    LOCATION_UPDATE: 'maps.update',
+    LOCATION_SET: 'maps.search',
+    HELLO: 'hello',
+    WHO_ARE_YOU: 'who are you',
+    EVENTS_SEARCH: 'events.search',
+    EVENTS_UPDATE: 'change.events'
+}
+
 function handleMessage(req, res) {
     messaging_events = req.body.entry[0].messaging;
     for (i = 0; i < messaging_events.length; i++) {
@@ -311,30 +334,6 @@ function sendMessage(sender, data) {
             console.log('Error: ', response.body.error)
         }
     })
-}
-
-
-var CONVERSATIONS = {
-    ABOUT_SCOUNT: `I'm a sloth that finds you cool events to attend.`
-}
-
-var STATES = {
-    INITIAL: 'INITIAL',
-    RECEIVED_LOCATION: 'RECEIVED_LOCATION',
-    LOCATION_CORRECT: 'LOCATION_CORRECT',
-    LOCATION_INCORRECT: 'LOCATION_INCORRECT',
-    LOCATION_CONFIRMED: 'LOCATION_CONFIRMED',
-    SELECTING_CATEGORY: 'SELECTING_CATEGORY',
-    SELECTED_CATEGORY: 'SELECTED_CATEGORY'
-}
-
-var USER_ACTIONS = {
-    LOCATION_UPDATE: 'maps.update',
-    LOCATION_SET: 'maps.search',
-    HELLO: 'hello',
-    WHO_ARE_YOU: 'who are you',
-    EVENTS_SEARCH: 'events.search',
-    EVENTS_UPDATE: 'change.events'
 }
 
 module.exports = {
